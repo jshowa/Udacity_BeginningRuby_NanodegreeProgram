@@ -1,0 +1,5 @@
+My background consists of mostly developing modifications for point of sale applications, specifically with NCR Counterpoint. I've done some work with customizing Crystal reports, doing Microsoft SQL database modifications (tables, stored procedures, etc.), and writing applications in C#/VB.NET. I've also worked with graphical languages (i.e. LabVIEW) developing monitoring applications using sensing and testing equipment. I've helped design and document an application that monitors tritium levels, airborne particles, and activates lights and relays wirelessly through RS232/485 serial protocols.
+
+My non-technical working experience consists of doing security and dispatch work, tutoring, and cooking. These skills helped cultivate a sense of discipline and attention to detail that helps me anticipate things easier while coding. It has also helped me hone my logical and procedural skills which is the basis for all computer code. This procedural affinity will help me translate problems into code by breaking solutions up into their individual steps.
+
+So, my exposure to other languages and my ability to be disciplined and procedural will help me program in Ruby.

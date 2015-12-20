@@ -1,0 +1,3 @@
+1) One of my biggest concerns isn't so much learning to program with Ruby (as I've been exposed to many languages in college), but how to program. Mainly, how does one approach problems and translate them to code in a efficient way? I find I'm often very slow at doing this and it mostly comes from my thought process in trying to figure out all the issues before commencing to code. Is there a faster way to think about solutions to problems?
+
+2) Is it hard to stay motivated when coding? I find that sometimes I have issues staying motivated, are there any tricks to accomplishing this?
