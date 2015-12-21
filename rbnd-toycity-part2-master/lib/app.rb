@@ -1,7 +1,78 @@
 require 'json'
-path = File.join(File.dirname(__FILE__), '../data/products.json')
-file = File.read(path)
-products_hash = JSON.parse(file)
+
+def setup_files
+  path = File.join(File.dirname(__FILE__), '../data/products.json')
+  file = File.read(path)
+  $products_hash = JSON.parse(file)
+  $report_file = File.new("report.txt", "w+")
+end
+
+def wrt_rpt_hdr(heading = :title)
+  if heading == :title
+    $report_file.write(" #####                                 ######"+ "\r\n")
+    $report_file.write("#     #   ##   #      ######  ####     #     # ###### #####   ####  #####  #####"+ "\r\n")
+    $report_file.write("#        #  #  #      #      #         #     # #      #    # #    # #    #   #" + "\r\n")
+    $report_file.write(" #####  #    # #      #####   ####     ######  #####  #    # #    # #    #   #" + "\r\n")
+    $report_file.write("      # ###### #      #           #    #   #   #      #####  #    # #####    #" + "\r\n")
+    $report_file.write("#     # #    # #      #      #    #    #    #  #      #      #    # #   #    #" + "\r\n")
+    $report_file.write(" #####  #    # ###### ######  ####     #     # ###### #       ####  #    #   #" + "\r\n")
+    $report_file.write("********************************************************************************" +"\r\n")
+    $report_file.write("\r\n")
+
+    # Write the current date to the report file
+    $report_file.write(Time.now.strftime("%m/%d/%Y") + "\r\n")
+  end
+  if heading == :product
+    $report_file.write("                     _            _"+ "\r\n")
+    $report_file.write("                    | |          | |"+ "\r\n")
+    $report_file.write(" _ __  _ __ ___   __| |_   _  ___| |_ ___"+ "\r\n")
+    $report_file.write("| '_ \\| '__/ _ \\ / _` | | | |/ __| __/ __|"+ "\r\n")
+    $report_file.write("| |_) | | | (_) | (_| | |_| | (__| |_\\__ \\" + "\r\n")
+    $report_file.write("| ,__/|_|  \\___/ \\__,_|\\__,_|\\___|\\__|___/" + "\r\n")
+    $report_file.write("| |                                       " + "\r\n")
+    $report_file.write("|_|" + "\r\n")
+    $report_file.write("************************" + "\r\n")
+    $report_file.write("\r\n")
+  end
+  if heading == :brand
+    $report_file.write(" _                         _" + "\r\n")
+    $report_file.write("| |                       | |" + "\r\n")
+    $report_file.write("| |__  _ __ __ _ _ __   __| |___" + "\r\n")
+    $report_file.write("| '_ \\| '__/ _` | '_ \\ / _` / __|" + "\r\n")
+    $report_file.write("| |_) | | | (_| | | | | (_| \\__ \\" + "\r\n")
+    $report_file.write("|_.__/|_|  \\__,_|_| |_|\\__,_|___/" + "\r\n")
+    $report_file.write("\r\n")
+  end
+end
+
+def prnt_file
+  $report_file = File.open("report.txt")
+  $report_file.each do |line|
+    puts "#{line}"
+  end
+  
+end
+
+
+def create_report
+
+  # 1. Write report headers (title and section)
+  wrt_rpt_hdr
+  wrt_rpt_hdr(:product)
+  wrt_rpt_hdr(:brand)
+
+  $report_file.close
+  
+  prnt_file
+end
+
+def start
+  setup_files
+  create_report
+end
+
+start
+
 
 # Print "Sales Report" in ascii art
 
