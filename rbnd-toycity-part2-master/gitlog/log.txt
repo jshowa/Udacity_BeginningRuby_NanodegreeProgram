@@ -1,3 +1,9 @@
+commit 90ac19de3fa25ec3ed71602887f9d3a7b6dd54d1
+Author: Jacob Howarth <jshowa.git@gmail.com>
+Date:   Sun Dec 20 21:36:33 2015 -0500
+
+    Added ascii art for headers. Wrote setup file code.
+
 commit 15381d2c4a88afa897886822940529e491ac50b1
 Author: Jacob Howarth <jshowa.git@gmail.com>
 Date:   Sat Dec 19 23:06:18 2015 -0500
