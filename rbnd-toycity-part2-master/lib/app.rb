@@ -7,7 +7,7 @@ require 'json'
 def setup_files
   path = File.join(File.dirname(__FILE__), '../data/products.json')
   file = File.read(path)
-  $products_hash = JxSON.parse(file)
+  $products_hash = JSON.parse(file)
   $report_file = File.new("report.txt", "w+")
 end
 
@@ -68,18 +68,18 @@ def separator(num_of_astrsk = 24)
 end
 
 
-# Name: prnt_file
+# Name: prnt_file (testing only)
 # Parameters: none
 # Description: Prints the file used in $report_file
 # to stdout.
 # Return: none
-def prnt_file
-  $report_file = File.open("report.txt")
-  $report_file.each do |line|
-    puts "#{line}"
-  end
-  
-end
+#def prnt_file
+#  $report_file = File.open("report.txt")
+#  $report_file.each do |line|
+#    puts "#{line}"
+#  end
+#  
+#end
 
 
 # Name: wrt_prod_name
@@ -152,12 +152,27 @@ def wrt_avg_disc(avg_prc, retail_prc, options = {})
   $report_file.puts("Average Discount:" + "%#{format}s" % avg_disc.to_s + "%")
 end
 
+# Name: add_new_brand
+# Parameters: brands - array containing product brands info, symbol product_brand - optional argument for brand name
+# Description: Adds a new brand with default stock, total price, total sales, count and average price (defaulted
+# to 0) and brand title passed as optional argument. The additions are unique based on the brand name.
+# Return: none
 def add_new_brand(brands, options = {})
   product_brand = options[:product_brand] || "" 
   brands.push({title: product_brand, stock: 0, total_prc: 0.0, total_sales: 0.0, count: 0, brand_avg_prc: 0.0})
   brands = brands.uniq! { |item| item[:title] }
 end
 
+# Name: add_brand_info
+# Parameters: brands - array containing product brands info, title - brand name of product, stock - # products
+# in stock with that brand, full_prc - total retail price of all products within the brand, total_sales - total
+# sales of all products within the brand, (optional args) symbol full_prc_precision - # digits to round total retail price of
+# all products within the brand, symbol tot_sales_precision - # of digits to round total sales of all products
+# within the brand, symbol avg_prc_precision - # of digits to round average brand price
+# Description: Adds the stock of products in the brand, total retail price of all products in the brand,
+# total sales of all products in the brand, and the average price of all products in the brand to the
+# brands array based on the brand name.
+# Return: none
 def add_brand_info(brands, title = "", stock = 0, full_prc = 0.0, total_sales = 0.0, options = {})
   brands.each { |item|
     if item[:title] == title
@@ -170,24 +185,107 @@ def add_brand_info(brands, title = "", stock = 0, full_prc = 0.0, total_sales = 
 
 end
 
+# Name: add_brand_stk
+# Parameters: brand_hash - hash for specific brand, stock - stock of specific product
+# Description: Adds stock of product to existing brand
+# Return: none
 def add_brand_stk(brand_hash, stock = 0)
   brand_hash[:stock] = brand_hash[:stock] + stock
 end
 
+# Name: add_brand_tot_prc
+# Parameters: brand_hash - hash for specific brand, full_prc - retail price
+# of product, (optional) precision - # of digits to round total retail price of products in brand
+# Description: Adds retail price of product to existing brand
+# Return: none
 def add_brand_tot_prc(brand_hash, full_prc = 0.0, options = {})
   brand_hash[:total_prc] = (brand_hash[:total_prc] + full_prc.to_f).round(options[:precision] || 2)
 end
 
+# Name: add_brand_tot_sales
+# Parameters: brand_hash - hash for specific brand, total_sales - total sales 
+# of products in brand, (optional) precision - # of digits to round total sales of products in brand
+# Description: Adds totals sales of each product to existing brand
+# Return: none
 def add_brand_tot_sales(brand_hash, total_sales = 0.0, options = {})
   brand_hash[:total_sales] = (brand_hash[:total_sales] + total_sales).round(options[:precision] || 2)
 end
 
+# Name: add_brand_avg_prc
+# Parameters: brand_hash - hash for specific brand, 
+# Description: Counts each product in existing brand and takes the average price
+# over the sum of the retail prices of each product in the brand. (optional) precision - # of digits
+# to round total sales of products in brand
+# Return: none
 def add_brand_avg_prc(brand_hash, options = {})
   brand_hash[:count] = brand_hash[:count] + 1
   brand_hash[:brand_avg_prc] = (brand_hash[:total_prc] / brand_hash[:count]).round(options[:precision] || 2)
 end
 
+# Name: wrt_brand_info
+# Parameters: brands - array containing brand info, boolean nam_flg - flag used
+# to write the brand name (default = true), boolean stk_flg - flag used to write the
+# stock of each brand (default = true), boolean avg_prc_flg - flag used to write the
+# average retail price of products in the brand (default = true), boolean tot_sales_flg -
+# flag used to write the total sales of each product in the brand (default = true), (optional) symbol
+# stk_format - character spacing for writing brand stock, symbol brand_avg_prc_format - 
+# character spacing for writing brand average retail price, symbol brand_tot_sales_format -
+# character spacing for writing brand total sales
+# Description: Writes brand information to report file based on parameter flags.
+# Return: none
+def wrt_brand_info(brands, nam_flg = true, stk_flg = true, avg_prc_flg = true, tot_sales_flg = true, options = {})
+  brands.each { |item|
+    if nam_flg
+      wrt_brand_name(item[:title])
+      separator(29)
+    end
+    if stk_flg
+      wrt_brand_stk(item[:stock], options[:stk_format])
+    end
+    if avg_prc_flg
+      wrt_brand_avg_prc(item[:brand_avg_prc], options[:brand_avg_prc_format])
+    end
+    if tot_sales_flg
+      wrt_brand_tot_sales(item[:total_sales], options[:brand_tot_sales_format])
+    end
+    separator(29)
+    $report_file.puts
+  }
+end
 
+# Name: wrt_brand_name
+# Parameters: title - brand name 
+# Description: Writes the name of the brand in upper case letters
+# to the report file.
+# Return: none
+def wrt_brand_name(title)
+  $report_file.puts(title.upcase)
+end
+
+# Name: wrt_brand_stk
+# Parameters: stock - # of products available, format - character spacing for stock (default = 6) 
+# Description: Writes the stock available for the brand to the report file
+# Return: none
+def wrt_brand_stk(stock, format = 6)
+  $report_file.puts("Number of Products:" + "%#{format}s" % stock.to_s)
+end
+
+# Name: wrt_brand_avg_prc
+# Parameters: brand_avg_prc - retail price of all products for the brand, format - character spacing for stock (default = 6)
+# Description: Writes the average retail price across all products for the specific brand to the
+# report file.
+# Return: none
+def wrt_brand_avg_prc(brand_avg_prc, format = 6)
+  $report_file.puts("Average Product Price:" + "%#{format}s" % "$" + brand_avg_prc.to_s)
+end
+
+# Name: wrt_brand_tot_sales
+# Parameters: brand_tot_sales - total sales of all products for the brand, format - character spacing for stock (default = 6) 
+# Description: Writes the total sales for all products in the brand to the report file.
+# Return: none
+def wrt_brand_tot_sales(brand_tot_sales, format = 6)
+  $report_file.puts("Total Sales:" + "%#{format}s" % "$" + brand_tot_sales.to_s)
+end
 
 # Name: create_report
 # Parameters: None
@@ -242,12 +340,12 @@ def create_report
   separator(29)
 
   # 5. Write brand info
-  wrt_brand_info(true, true, true, true, stk_format: 7, brand_avg_prc_format: 2, brand_tot_sales_format: 12)
+  wrt_brand_info(brands, true, true, true, true, stk_format: 7, brand_avg_prc_format: 2, brand_tot_sales_format: 12)
 
 
   $report_file.close
   
-  prnt_file
+  #prnt_file
 end
 
 # Name: start

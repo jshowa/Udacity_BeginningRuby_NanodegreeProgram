@@ -53,3 +53,17 @@ Average Discount:   5.0%
 |_.__/|_|  \__,_|_| |_|\__,_|___/
 
 *****************************
+LEGO
+*****************************
+Number of Products:     55
+Average Product Price: $111.49
+Total Sales:           $416.96
+*****************************
+
+NANO BLOCKS
+*****************************
+Number of Products:     12
+Average Product Price: $49.99
+Total Sales:           $68.98
+*****************************
+

@@ -1,3 +1,9 @@
+commit 14637119f03ad62379c72327c782a875fb765b84
+Author: Jacob Howarth <jshowa.git@gmail.com>
+Date:   Sun Dec 27 00:50:36 2015 -0500
+
+    Placed brand info calculations in methods, added documentation to product methods.
+
 commit 779773a42195668a8853dc2e619ee17d1307aef7
 Author: Jacob Howarth <jshowa.git@gmail.com>
 Date:   Fri Dec 25 22:17:59 2015 -0500
