@@ -7,7 +7,7 @@ require 'json'
 def setup_files
   path = File.join(File.dirname(__FILE__), '../data/products.json')
   file = File.read(path)
-  $products_hash = JSON.parse(file)
+  $products_hash = JxSON.parse(file)
   $report_file = File.new("report.txt", "w+")
 end
 
@@ -56,6 +56,13 @@ def wrt_rpt_hdr(heading = :title)
 end
 
 
+# Name: separator
+# Parameters: integer num_of_astrsk - default 24
+# Description: Writes a section divider between
+# each item in the report file. The section divider is
+# multiple asterisk characters with the default
+# being 24.
+# Return: none
 def separator(num_of_astrsk = 24)
   $report_file.puts("*" * num_of_astrsk)
 end
@@ -75,20 +82,37 @@ def prnt_file
 end
 
 
+# Name: wrt_prod_name
+# Parameters: name - name of product
+# Description: Writes the name of the product
+# to the report file.
+# Return: none
 def wrt_prod_nam(name)
   $report_file.puts(name)
 end
 
+# Name: wrt_retail_prc
+# Parameters: price - product retail price, symbol format - field spacing
+# Description: Writes the products retail price to the report file.
+# Return: none
 def wrt_retail_prc(price, options = {})
   format = options[:format] || 6
   $report_file.puts("Retail Price:" + "%#{format}s" % "$" + price.to_s)
 end
 
+# Name: wrt_total_purchs
+# Parameters: count - number of purchases for a product, symbol format - field spacing
+# Description: Writes the number of purchases for a productn to the report file.
+# Return: none
 def wrt_total_purchs(count, options = {})
   format = options[:format] || 6
   $report_file.puts("Total Purchases:" + "%#{format}s" % count.to_s)
 end
 
+# Name: wrt_total_sales
+# Parameters: purchases - purchase information for a product, symbol format - field spacing
+# Description: Calculates and writes the total sales for the product to the report.
+# Return: total_sales - total amount of sales for the product based on purchases
 def wrt_total_sales(purchases, options = {})
   format = options[:format] || 6
   total_sales = 0.0
@@ -99,6 +123,12 @@ def wrt_total_sales(purchases, options = {})
   total_sales
 end
 
+# Name: wrt_avg_prc
+# Parameters: total_sales - total sales amount for product, sales_count - # of purchases for product
+# symbol format - field spacing, symbol precision - digits to round 
+# Description: Calculates average price of product to two digits after the decimal and writes
+# it to the report file.
+# Return: avg_prc - average sale price of the product 
 def wrt_avg_prc(total_sales, sales_count, options = {})
   format = options[:format] || 6
   precision = options[:precision] || 2
@@ -107,6 +137,13 @@ def wrt_avg_prc(total_sales, sales_count, options = {})
   avg_prc
 end
 
+# Name: wrt_avg_disc
+# Parameters: avg_prc - average sales price of the product, retail_prc - regular price the product is sold at
+# symbol format - field spacing, symbol precision - digits to round
+# Description: Calculates the average discount to two digits after the decimal and writes it
+# to the report file. The formula is based on the difference of the average price and full retail price
+# compared to the full retail price.
+# Return: none
 def wrt_avg_disc(avg_prc, retail_prc, options = {})
   format = options[:format] || 6
   precision = options[:precision] || 2
@@ -115,12 +152,55 @@ def wrt_avg_disc(avg_prc, retail_prc, options = {})
   $report_file.puts("Average Discount:" + "%#{format}s" % avg_disc.to_s + "%")
 end
 
+def add_new_brand(brands, options = {})
+  product_brand = options[:product_brand] || "" 
+  brands.push({title: product_brand, stock: 0, total_prc: 0.0, total_sales: 0.0, count: 0, brand_avg_prc: 0.0})
+  brands = brands.uniq! { |item| item[:title] }
+end
+
+def add_brand_info(brands, title = "", stock = 0, full_prc = 0.0, total_sales = 0.0, options = {})
+  brands.each { |item|
+    if item[:title] == title
+      add_brand_stk(item, stock)
+      add_brand_tot_prc(item, full_prc, precision: options[:full_prc_precision] || 2)
+      add_brand_tot_sales(item, total_sales, precision: options[:tot_sales_precision] || 2)
+      add_brand_avg_prc(item, precision: options[:avg_prc_precision] || 2)
+    end
+  }
+
+end
+
+def add_brand_stk(brand_hash, stock = 0)
+  brand_hash[:stock] = brand_hash[:stock] + stock
+end
+
+def add_brand_tot_prc(brand_hash, full_prc = 0.0, options = {})
+  brand_hash[:total_prc] = (brand_hash[:total_prc] + full_prc.to_f).round(options[:precision] || 2)
+end
+
+def add_brand_tot_sales(brand_hash, total_sales = 0.0, options = {})
+  brand_hash[:total_sales] = (brand_hash[:total_sales] + total_sales).round(options[:precision] || 2)
+end
+
+def add_brand_avg_prc(brand_hash, options = {})
+  brand_hash[:count] = brand_hash[:count] + 1
+  brand_hash[:brand_avg_prc] = (brand_hash[:total_prc] / brand_hash[:count]).round(options[:precision] || 2)
+end
+
+
+
+# Name: create_report
+# Parameters: None
+# Description: Required method that acts as a driver method to write
+# the required content of the report.
+# Return: None
 def create_report
 
   # 1. Write report headers (title and section)
   wrt_rpt_hdr
   wrt_rpt_hdr(:product)
   
+  # Array used to hold required brand info for each item.
   brands = []
 
   $products_hash["items"].each do |product|
@@ -145,45 +225,42 @@ def create_report
     # 2e. Write average discount
     wrt_avg_disc(avg_prc, product["full-price"], format: 6, precision: 2)
 
+    separator
+
     $report_file.puts
 
-    # 3. Collect brand info
-    brands.push({title: product["brand"], stock: 0, total_prc: 0.0, total_sales: 0.0, count: 0, brand_avg_prc: 0.0})
+    # 3. Add new brand to brands array
+    add_new_brand(brands, product_brand: product["brand"])
 
-    
+    add_brand_info(brands, product["brand"], product["stock"], product["full-price"], total_sales)
 
-    
-    # 4. Keep hash array unique
-    brands = brands.uniq { |item| item[:title] }
-    
-    brands = brands.each { |item|
-      if item[:title] == product["brand"]
-        item[:stock] = item[:stock] + product["stock"]
-        item[:total_prc] = (item[:total_prc] + product["full-price"].to_f).round(2)
-        item[:total_sales] = (item[:total_sales] + total_sales).round(2)
-        item[:count] = item[:count] + 1
-        item[:brand_avg_prc] = item[:total_prc] / item[:count]
-      end
-    }
-
-    #puts $products_hash
-    puts brands
-    
   end
 
-  
+  # 4. Write brand header
   wrt_rpt_hdr(:brand)
+
+  separator(29)
+
+  # 5. Write brand info
+  wrt_brand_info(true, true, true, true, stk_format: 7, brand_avg_prc_format: 2, brand_tot_sales_format: 12)
+
 
   $report_file.close
   
   prnt_file
 end
 
+# Name: start
+# Parameters: None
+# Description: Driver method for report, setups JSON file and creates report
+# from JSON data.
+# Return: None
 def start
   setup_files
   create_report
 end
 
+# Call driver method
 start
 
 
