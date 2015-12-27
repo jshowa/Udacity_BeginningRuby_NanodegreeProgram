@@ -1,3 +1,9 @@
+commit 34a5f90c268fc5bf4b20b81d0bc6bf06b334d1de
+Author: Jacob Howarth <jshowa.git@gmail.com>
+Date:   Sun Dec 27 17:45:07 2015 -0500
+
+    Finished adding methods for brand info. Created file write methods for writing and adding brand name, stock, average price, and total sales. Finished commenting all methods.
+
 commit 14637119f03ad62379c72327c782a875fb765b84
 Author: Jacob Howarth <jshowa.git@gmail.com>
 Date:   Sun Dec 27 00:50:36 2015 -0500
