@@ -29,6 +29,46 @@ class TodoList
     @items.delete_at(index)
   end
 
+  def sort_priority
+    @items.sort { |x, y| y.priority[:value] <=> x.priority[:value] }
+  end
+
+  def sort_priority!
+    @items.sort! { |x, y| y.priority[:value] <=> x.priority[:value] }
+  end
+
+  # Searches the list based on description, completed/incomplete
+  # searches are possible. Returns items that match search input.
+  def search_description(target)
+    results = []
+    @items.each do |item|
+      if item.description.include?(target)
+        results.push(item)
+      end
+    end
+    results
+  end
+
+  def search_completion(target = true)
+    results = []
+    @items.each do |item|
+      if item.completed_status == target
+        results.push(item)
+      end
+    end
+    results
+  end
+
+  def search_priority(target = Priority::LOW)
+    results = []
+    @items.each do |item|
+      if item.priority == target
+        results.push(item)
+      end
+    end
+    results
+  end
+
   def print_list opts = {}
     options = {num: @title.length, char: "*", newline: "\n"}.merge(opts)
 
@@ -107,9 +147,9 @@ end
 
 # New feature - list priority
 class Priority
-  HIGH={value: 1, string: "High"}
+  LOW={value: 1, string: "Low"}
   MEDIUM={value: 2, string: "Medium"}
-  LOW={value: 3, string: "Low"}
+  HIGH={value: 3, string: "High"}
 end
 
 
