@@ -1,0 +1,8 @@
+*********************
+Jacob's New Todo List
+*********************
+
+1    Finish homework     Completed: true     Priority: High      
+2    Go to store         Completed: false    Priority: High      
+3    Go to school        Completed: false    Priority: Medium    
+4    Clean house         Completed: false    Priority: Low       

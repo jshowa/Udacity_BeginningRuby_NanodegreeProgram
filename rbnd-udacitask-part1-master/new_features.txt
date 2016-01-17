@@ -1,0 +1,11 @@
+1. Sort by priority and priority rating of items
+
+This feature adds a priority attribute to each item rated high, medium, or low. This attribute allows each task to be assigned a priority to know which task(s) need to be completed first and provides an order in which to complete them. Priorities can be escalated and descalated for each task and the list can be sorted by priority. The priorities are implemented as separate tasks in a enum style format. Both an in place sort and a non-destructive sort are available. However, the way the priority class is designed is limiting as only three levels are aloud making the sort somewhat ambiguous when there are multiple items of the same priority. Allowing a weighted value to each task would allow a better sorting among tasks with similar priorities.
+
+2. Searching by description, completion, and priority
+
+This feature provides basic search functionality useful for lists with many tasks. It returns a set of tasks in a non-destructive manner that match the target search functionality. The most useful is the description search which will return a set of tasks that contain the target search string. This allows for non-complete entries to still return results. The priority and compeltion searches simply return all tasks with a given priority or completion status. The search functions could probably be more refined allowing for whitespace matching and possibly a search history functionality.
+
+3. Writing and reading task lists
+
+The last feature is the ability to write and read task lists from a text file. This allows the ability to store task lists and make them accessible to other programs. Right now, the feature does a basic ASCII file but having the ability to store the task list in different file formats could improve its usability in other word processors and programs. 

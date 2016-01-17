@@ -1,3 +1,5 @@
+require './priority.rb'
+
 class TodoList
   attr_accessor :title, :items
   # methods and stuff go here
@@ -29,6 +31,7 @@ class TodoList
     @items.delete_at(index)
   end
 
+  # Feature #1 sort by priority
   def sort_priority
     @items.sort { |x, y| y.priority[:value] <=> x.priority[:value] }
   end
@@ -37,8 +40,9 @@ class TodoList
     @items.sort! { |x, y| y.priority[:value] <=> x.priority[:value] }
   end
 
-  # Searches the list based on description, completed/incomplete
-  # searches are possible. Returns items that match search input.
+  # Feature #2
+  # Searches the list based on description, complete/incomplete
+  # searches are possible. Returns items that include search input.
   def search_description(target)
     results = []
     @items.each do |item|
@@ -49,6 +53,7 @@ class TodoList
     results
   end
 
+  # Searches and returns array of completed/uncompleted tasks
   def search_completion(target = true)
     results = []
     @items.each do |item|
@@ -59,6 +64,7 @@ class TodoList
     results
   end
 
+  # searches and returs array of tasks with target priority
   def search_priority(target = Priority::LOW)
     results = []
     @items.each do |item|
@@ -90,6 +96,21 @@ class TodoList
 
     output
   end
+
+  # Feature #3 Write/read current task list to/from file
+  def wrt_list_to_file(file = "currtasklist.txt")
+    list_file = File.new(file.to_s, "w+")
+    list_file.puts self.print_list
+    list_file.close
+  end
+
+  def rd_list_file(file = "currtasklist.txt")
+    list_file = File.open(file.to_s)
+    list_file.each do |line|
+      puts "#{line}"
+    end
+  end
+    
 end
 
 class Item
@@ -145,11 +166,6 @@ class Item
     
 end
 
-# New feature - list priority
-class Priority
-  LOW={value: 1, string: "Low"}
-  MEDIUM={value: 2, string: "Medium"}
-  HIGH={value: 3, string: "High"}
-end
+
 
 
