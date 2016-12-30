@@ -1,0 +1,17 @@
+commit a7e9b31e1a9aa1cdd6934ddd1d8c6bd875c3be77
+Author: Jacob Howarth <jshowa.git@gmail.com>
+Date:   Sun Jan 17 01:11:57 2016 -0500
+
+    Added new_features.txt. Moved Priority class for items to own file. Renamed udacitask_starter to udacitask. Cleaned up directory.
+
+commit a8e7f34da45d7a57d8fc23a3958b88e93805358f
+Author: Jacob Howarth <jshowa.git@gmail.com>
+Date:   Sat Jan 16 19:04:21 2016 -0500
+
+    Added search by completion, priority, and description. Added sort by priority. Wrote test code for these features in driver.
+
+commit d3d22c346e6e1380eb47bccbb78826ce0d0883b2
+Author: Jacob Howarth <jshowa.git@gmail.com>
+Date:   Fri Jan 1 19:42:20 2016 -0500
+
+    Added udacitask part 1 project. Renamed todolist_starter.rb to todolist.rb added initialize code, add item, delete item, print methods to TodoList. Added initialize code, completion update, completion check, print methods to Items class. Added priority enum class and priority escalate and de-escalate methods to Items class. Wrote some driver code to test methods in TodoList.
